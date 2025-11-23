@@ -1,6 +1,6 @@
-import sys
 import random
-from typing import List, Tuple, Set
+import sys
+from typing import List, Set, Tuple
 
 import pygame
 
@@ -35,10 +35,13 @@ class Snake:
 
     def __init__(self, start_pos: Tuple[int, int]):
         # Body is a list of (x, y) grid positions, head at index 0
-        self.body: List[Tuple[int, int]] = [start_pos, (start_pos[0] - 1, start_pos[1])]
+        self.body: List[Tuple[int, int]] = [
+            start_pos, (start_pos[0] - 1, start_pos[1])]
         self.direction: Tuple[int, int] = RIGHT
         self._pending_growth = 0
-        self._next_direction = self.direction  # buffer to apply direction changes once per tick
+        self._next_direction = (
+            self.direction
+        )  # buffer to apply direction changes once per tick
 
     @property
     def head(self) -> Tuple[int, int]:
@@ -53,7 +56,8 @@ class Snake:
         """Advance the snake by one cell, applying growth when needed."""
         # apply buffered direction exactly once per tick
         self.direction = self._next_direction
-        new_head = (self.head[0] + self.direction[0], self.head[1] + self.direction[1])
+        new_head = (self.head[0] + self.direction[0],
+                    self.head[1] + self.direction[1])
         self.body.insert(0, new_head)
         if self._pending_growth > 0:
             self._pending_growth -= 1
@@ -107,13 +111,21 @@ def draw_grid(surface: pygame.Surface) -> None:
         pygame.draw.line(surface, COLOR_GRID, (0, y), (SCREEN_WIDTH, y), 1)
 
 
-def draw_rect_cell(surface: pygame.Surface, color: Tuple[int, int, int], cell: Tuple[int, int]):
+def draw_rect_cell(
+    surface: pygame.Surface, color: Tuple[int, int, int], cell: Tuple[int, int]
+):
     x, y = cell
     rect = pygame.Rect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE)
     pygame.draw.rect(surface, color, rect)
 
 
-def render_text(surface: pygame.Surface, text: str, size: int, color: Tuple[int, int, int], center: Tuple[int, int]):
+def render_text(
+    surface: pygame.Surface,
+    text: str,
+    size: int,
+    color: Tuple[int, int, int],
+    center: Tuple[int, int],
+):
     font = pygame.font.SysFont("consolas,arial,dejavusans", size, bold=True)
     label = font.render(text, True, color)
     rect = label.get_rect(center=center)
@@ -190,9 +202,27 @@ def game_loop():
         render_text(screen, f"Score: {score}", 20, COLOR_TEXT, (70, 18))
 
         if game_over:
-            render_text(screen, "GAME OVER", 36, COLOR_GAME_OVER, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 20))
-            render_text(screen, "Press Enter or R to Restart", 20, COLOR_TEXT, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 16))
-            render_text(screen, "Esc to Quit", 18, (180, 180, 180), (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 42))
+            render_text(
+                screen,
+                "GAME OVER",
+                36,
+                COLOR_GAME_OVER,
+                (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 20),
+            )
+            render_text(
+                screen,
+                "Press Enter or R to Restart",
+                20,
+                COLOR_TEXT,
+                (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 16),
+            )
+            render_text(
+                screen,
+                "Esc to Quit",
+                18,
+                (180, 180, 180),
+                (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 42),
+            )
 
         pygame.display.flip()
         clock.tick(FPS)
